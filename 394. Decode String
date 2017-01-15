@@ -1,0 +1,32 @@
+public class Solution {
+    public String decodeString(String s) {
+        Stack<Integer> count = new Stack();
+        Stack<String> result = new Stack();
+        result.push("");
+        int i = 0;
+        while (i < s.length()) {
+            char c = s.charAt(i);
+            if (Character.isDigit(c)) {
+                int start = i;
+                while (Character.isDigit(s.charAt(i + 1))) {
+                    i++;
+                }
+                count.push(Integer.parseInt(s.substring(start, i + 1)));
+            } else if (c == '[') {
+                result.push("");
+            } else if (c == ']') {
+                String str = result.pop();
+                int time = count.pop();
+                StringBuilder sb = new StringBuilder();
+                for (int j = 0; j < time; j++) {
+                    sb.append(str);
+                }
+                result.push(result.pop() + sb.toString());
+            } else {
+                result.push(result.pop() + c);
+            }
+            i++;
+        }
+        return result.pop();
+    }
+}
