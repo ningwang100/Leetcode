@@ -1,0 +1,39 @@
+public class Solution {
+    class Pair {
+        int index;
+        int[] pair;
+        long sum;
+        public Pair(int idx, int n1, int n2) {
+            this.index = idx;
+            pair = new int[] {n1, n2};
+            sum = (long)n1 + (long)n2;
+        }
+    }
+    
+    class comPair implements Comparator<Pair> {
+        public int compare(Pair p1, Pair p2) {
+            return Long.compare(p1.sum, p2.sum);
+        }
+    } 
+    public List<int[]> kSmallestPairs(int[] nums1, int[] nums2, int k) {
+        List<int[]> result = new LinkedList<int[]>();
+        
+        if (nums1 == null || nums2 == null || nums1.length == 0 || nums2.length == 0) {
+            return result;
+        }
+        PriorityQueue<Pair> queue = new PriorityQueue<Pair>(k, new comPair());
+        for (int i = 0; i < nums1.length && i < k; i++) {
+            queue.offer(new Pair(0, nums1[i], nums2[0]));
+        }
+        for (int i = 0; i < k && !queue.isEmpty(); i++) {
+            Pair p = queue.poll();
+            result.add(p.pair);
+            if (p.index < nums2.length - 1) {
+                int next = p.index + 1;
+                queue.offer(new Pair(next, p.pair[0], nums2[next]));
+            }
+        }
+        return result;
+    }
+}
+
